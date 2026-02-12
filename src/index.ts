@@ -64,11 +64,30 @@ issuesCmd
   });
 
 issuesCmd
-  .command('show <id>')
-  .description('Show issue details')
-  .action(async (id) => {
+  .command('search <query>')
+  .description('Search issues by title or description')
+  .option('--limit <number>', 'Limit results', '20')
+  .action(async (query, options) => {
     const cmd = new IssuesCommand(config);
-    await cmd.show(id);
+    await cmd.search(query, options);
+  });
+
+issuesCmd
+  .command('mine')
+  .description('Show issues assigned to you')
+  .option('--limit <number>', 'Limit results', '20')
+  .action(async (options) => {
+    const cmd = new IssuesCommand(config);
+    await cmd.mine(options);
+  });
+
+issuesCmd
+  .command('assigned <username>')
+  .description('Show issues assigned to a user')
+  .option('--limit <number>', 'Limit results', '20')
+  .action(async (username, options) => {
+    const cmd = new IssuesCommand(config);
+    await cmd.assigned(username, options);
   });
 
 // Status command

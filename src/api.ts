@@ -101,4 +101,23 @@ export class SprintFlintAPI {
       return false;
     }
   }
+
+  async searchIssues(query: string, limit: number = 20): Promise<Issue[]> {
+    const response = await this.client.get('/issues/search', { 
+      params: { q: query, limit } 
+    });
+    return response.data.issues;
+  }
+
+  async getCurrentUser(): Promise<{ username: string; email: string; id: string }> {
+    const response = await this.client.get('/auth/me');
+    return response.data.user;
+  }
+
+  async getIssuesByAssignee(username: string, limit: number = 20): Promise<Issue[]> {
+    const response = await this.client.get('/issues', { 
+      params: { assignee: username, limit } 
+    });
+    return response.data.issues;
+  }
 }
