@@ -6,6 +6,9 @@ import { AuthCommand } from './commands/auth';
 import { SprintsCommand } from './commands/sprints';
 import { IssuesCommand } from './commands/issues';
 import { StatusCommand } from './commands/status';
+import { AutoplayCommand } from './commands/autoplay';
+import { ExportCommand } from './commands/export';
+import { GitHubCommand } from './commands/github';
 import { Config } from './config';
 
 const program = new Command();
@@ -14,7 +17,7 @@ const config = new Config();
 program
   .name('sprintflint')
   .description('CLI for SprintFlint - agile sprint management')
-  .version('0.1.0');
+  .version('0.2.0');
 
 // Auth command
 program
@@ -97,6 +100,56 @@ program
   .action(async () => {
     const cmd = new StatusCommand(config);
     await cmd.execute();
+  });
+
+// Autoplay command
+program
+  .command('autoplay')
+  .description('Trigger AI autoplay on an issue')
+  .option('--issue-id <id>', 'Issue ID to autoplay')
+  .option('--watch', 'Watch progress in real-time')
+  .action(async (options) => {
+    const cmd = new AutoplayCommand(config);
+    await cmd.execute(options);
+  });
+
+// Export command
+program
+  .command('export')
+  .description('Export issues to CSV or JSON')
+  .option('--format <format>', 'Export format (csv, json)', 'csv')
+  .option('--output <file>', 'Output file path')
+  .option('--sprint <id>', 'Sprint ID to export')
+  .action(async (options) => {
+    const cmd = new ExportCommand(config);
+    await cmd.execute(options);
+  });
+
+// GitHub integration command
+const githubCmd = program
+  .command('github')
+  .description('GitHub integration');
+
+githubCmd
+  .command('import')
+  .description('Import issues from GitHub')
+  .requiredOption('--repo <repo>', 'Repository (owner/repo)')
+  .option('--labels <labels>', 'Comma-separated labels to filter')
+  .option('--milestone <milestone>', 'Milestone to filter')
+  .option('--sprint <id>', 'Target sprint ID')
+  .action(async (options) => {
+    const cmd = new GitHubCommand(config);
+    await cmd.importIssues(options);
+  });
+
+githubCmd
+  .command('sync')
+  .description('Sync issues with GitHub')
+  .requiredOption('--repo <repo>', 'Repository (owner/repo)')
+  .option('--bidirectional', 'Two-way sync', false)
+  .action(async (options) => {
+    const cmd = new GitHubCommand(config);
+    await cmd.sync(options);
   });
 
 // Open command

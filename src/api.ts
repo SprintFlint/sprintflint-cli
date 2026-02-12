@@ -120,4 +120,47 @@ export class SprintFlintAPI {
     });
     return response.data.issues;
   }
+
+  // Autoplay endpoints
+  async triggerAutoplay(issueId: string): Promise<{ id: string; status: string; issueId: string }> {
+    const response = await this.client.post('/autoplay/runs', { issue_id: issueId });
+    return response.data.run;
+  }
+
+  async getAutoplayStatus(runId: string): Promise<{
+    id: string;
+    status: 'running' | 'completed' | 'failed';
+    commits: string[];
+    filesChanged: number;
+    error?: string;
+  }> {
+    const response = await this.client.get(`/autoplay/runs/${runId}`);
+    return response.data.run;
+  }
+
+  // GitHub import endpoints
+  async importFromGitHub(params: {
+    repo: string;
+    labels?: string[];
+    milestone?: string;
+    targetSprintId?: string;
+  }): Promise<{
+    imported: number;
+    skipped: number;
+    issues: Issue[];
+  }> {
+    const response = await this.client.post('/integrations/github/import', params);
+    return response.data;
+  }
+
+  async syncWithGitHub(params: {
+    repo: string;
+    bidirectional: boolean;
+  }): Promise<{
+    created: number;
+    updated: number;
+  }> {
+    const response = await this.client.post('/integrations/github/sync', params);
+    return response.data;
+  }
 }
