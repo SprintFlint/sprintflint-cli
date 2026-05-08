@@ -2,16 +2,16 @@
 
 Command-line interface for SprintFlint - agile sprint management for teams that want to ship.
 
-## Installation
+> The CLI is in active development and is not yet published to npm. To use SprintFlint with your editor today, the supported path is the hosted MCP server at [sprintflint.com/mcp](https://sprintflint.com/mcp) (Claude Desktop / Cursor / Zed / Claude Code).
+
+## Installation (build from source)
 
 ```bash
-npm install -g sprintflint
-```
-
-Or use with npx:
-
-```bash
-npx sprintflint
+git clone https://github.com/SprintFlint/sprintflint-cli.git
+cd sprintflint-cli
+npm install
+npm run build
+npm link        # makes the `sprintflint` command available globally
 ```
 
 ## Quick Start
@@ -20,7 +20,7 @@ npx sprintflint
 # Authenticate with your API token
 sprintflint auth --token <your-api-token>
 
-# Get your token from: https://sprintflint.com/settings/api
+# Get your token from: https://sprintflint.com/accounts/edit (the "API Token" section)
 
 # List active sprints
 sprintflint sprints
